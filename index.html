@@ -71,14 +71,17 @@
 				string += aircraft.Call
 				string += " - "
 				string += aircraft.Alt
+				var image = {
+					url: 'icon.png',
+					size: new google.maps.Size(24, 24),
+					origin: new google.maps.Point(0, 0),
+					anchor: new google.maps.Point(12, 12)
+				};
 				var marker = new google.maps.Marker({
 					position: latLng,
 					map: map,
 					title: string,
-					icon: {
-						path: google.maps.SymbolPath.CIRCLE,
-						scale: 5
-					},
+					icon: image
 				});
 				markers.push(marker)
 				polylines.push(flightPath)
