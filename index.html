@@ -30,13 +30,16 @@
 		jQuery.extend({
 			getValues: function(url) {
 				var result = null;
-				$.ajax({
+				$.ajax({	
+					headers: { "Accept": "application/json"},
+					type: 'GET',
 					url: 'https://public-api.adsbexchange.com/VirtualRadar/AircraftList.json?fMilQ=true&trFmt=f&refreshTrails=1&lat=54.00366&lng=-2.547855&fDstL=0&fDstU=300',
-					type: 'get',
-					dataType: 'json',
-					async: false,
-					success: function(data) {
-						result = data;
+					crossDomain: true,
+					beforeSend: function(xhr){
+						xhr.withCredentials = true;
+					},
+					success: function(data, textStatus, request){
+					console.log(data);
 					}
 				});
 			return result;
