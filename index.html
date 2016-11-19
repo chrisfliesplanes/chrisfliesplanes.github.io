@@ -45,24 +45,26 @@
 	var data = $.getValues("url string");
 		for (var i = 0; i < data.acList.length; i++) {
 			var aircraft = data.acList[i]
-			if("Long" in aircraft && "Lat" in aircraft && "Cot" in aircraft){
-				var polyCoords = []
-				for (var i2 = 0; i2 < aircraft.Cot.length; i2+=3) {
-					var polyLatLng = {};
-					polyLatLng['lat'] = aircraft.Cot[i2]
-					polyLatLng['lng'] = aircraft.Cot[i2 + 1]
-					polyCoords.push(polyLatLng)	
-				};
-				
-				var flightPath = new google.maps.Polyline({
-					path: polyCoords,
-					geodesic: true,
-					strokeColor: '#'+Math.floor(Math.random()*16777215).toString(16),
-					strokeOpacity: 1.0,
-					strokeWeight: 2
-				});
-				
-				flightPath.setMap(map);
+			if("Long" in aircraft && "Lat" in aircraft){
+				if("Cot" in aircraft){
+					var polyCoords = []
+					for (var i2 = 0; i2 < aircraft.Cot.length; i2+=3) {
+						var polyLatLng = {};
+						polyLatLng['lat'] = aircraft.Cot[i2]
+						polyLatLng['lng'] = aircraft.Cot[i2 + 1]
+						polyCoords.push(polyLatLng)	
+					};
+					
+					var flightPath = new google.maps.Polyline({
+						path: polyCoords,
+						geodesic: true,
+						strokeColor: '#'+Math.floor(Math.random()*16777215).toString(16),
+						strokeOpacity: 1.0,
+						strokeWeight: 2
+					});
+					
+					flightPath.setMap(map);
+				}
 				var latLng = new google.maps.LatLng(aircraft.Lat,aircraft.Long);
 				var string = aircraft.Mdl
 				string += " - "
