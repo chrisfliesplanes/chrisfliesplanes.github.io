@@ -30,22 +30,19 @@
 		jQuery.extend({
 			getValues: function(url) {
 				var result = null;
-				$.ajax({	
-					headers: { "Accept": "application/json"},
-					type: 'GET',
-					url: 'https://public-api.adsbexchange.com/VirtualRadar/AircraftList.json?fMilQ=true&trFmt=f&refreshTrails=1&lat=54.00366&lng=-2.547855&fDstL=0&fDstU=300',
-					crossDomain: true,
-					beforeSend: function(xhr){
-						xhr.withCredentials = true;
-					},
-					success: function(data, textStatus, request){
-					console.log(data);
+				$.ajax({
+					url: 'https://cors-anywhere.herokuapp.com/https://public-api.adsbexchange.com/VirtualRadar/AircraftList.json?fMilQ=true&trFmt=f&refreshTrails=1&lat=54.00366&lng=-2.547855&fDstL=0&fDstU=300',
+					type: 'get',
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						result = data;
 					}
 				});
 			return result;
 			}
 		});
-		var data = $.getValues("url string");
+	var data = $.getValues("url string");
 		for (var i = 0; i < data.acList.length; i++) {
 			var aircraft = data.acList[i]
 			if("Long" in aircraft && "Lat" in aircraft && "Cot" in aircraft){
