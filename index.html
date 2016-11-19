@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      var map;
+      var markers = []
+      var polylines = []
+		function httpGet()
+		{
+			var xmlHttp = new XMLHttpRequest();
+			xmlHttp.open( "GET", 'https://public-api.adsbexchange.com/VirtualRadar/AircraftList.json?fMilQ=true&trFmt=f&refreshTrails=1&lat=54.00366&lng=-2.547855&fDstL=0&fDstU=300', false ); // false for synchronous request
+			xmlHttp.send();
+			return xmlHttp.responseText;
+		}
+      function setMarkers(map) {
+			var data = JSON.parse(httpGet())
+			for (var i = 0; i < data.acList.length; i++) {
+				var aircraft = data.acList[i]
+					if("Long" in aircraft && "Lat" in aircraft && "Cot" in aircraft){
+					var polyCoords = []
+					for (var i2 = 0; i2 < aircraft.Cot.length; i2+=3) {
+						var polyLatLng = {};
+						polyLatLng['lat'] = aircraft.Cot[i2]
+						polyLatLng['lng'] = aircraft.Cot[i2 + 1]
+						polyCoords.push(polyLatLng)	
+					};
+					
+					var flightPath = new google.maps.Polyline({
+						path: polyCoords,
+						geodesic: true,
+						strokeColor: '#'+Math.floor(Math.random()*16777215).toString(16),
+						strokeOpacity: 1.0,
+						strokeWeight: 2
+					});
+					flightPath.setMap(map);
+					var latLng = new google.maps.LatLng(aircraft.Lat,aircraft.Long);
+					var string = aircraft.Mdl
+					string += " - "
+					string += aircraft.Call
+					string += " - "
+					string += aircraft.Alt
+						var marker = new google.maps.Marker({
+						position: latLng,
+						map: map,
+						title: string,
+						icon: {
+							path: google.maps.SymbolPath.CIRCLE,
+							scale: 5
+          },
+					});
+					markers.push(marker)
+					polylines.push(flightPath)
+				}
+			}
+		}
+		
+		function removeMarkers(){
+			var i;
+			for(i=0;i<markers.length;i++){
+				markers[i].setMap(null);
+			}
+			markers = [];
+			for(i=0;i<polylines.length;i++){
+				polylines[i].setMap(null);
+			}
+			polylines = [];
+		}
+		
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 6,
+          center: new google.maps.LatLng(53.509865, -4.118092),
+          mapTypeId: 'terrain'
+        });
+		setMarkers(map)
+        
+
+      }
+      setInterval(function(){
+		removeMarkers();
+		setMarkers(map);
+		}, 10000);
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUPbxxvnqGrmKVj7ZzHwrDhKP5aFpoaaA&callback=initMap">
+    </script>
+  </body>
+</html>
