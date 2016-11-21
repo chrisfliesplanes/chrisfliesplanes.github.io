@@ -30,8 +30,9 @@
 		jQuery.extend({
 			getValues: function(url) {
 				var result = null;
+				var proxy = 'https://cors-anywhere.herokuapp.com/';
 				$.ajax({
-					url: 'https://cors-anywhere.herokuapp.com/https://public-api.adsbexchange.com/VirtualRadar/AircraftList.json?fMilQ=true&trFmt=f&refreshTrails=1&lat=54.00366&lng=-2.547855&fDstL=0&fDstU=500',
+					url: 'https://public-api.adsbexchange.com/VirtualRadar/AircraftList.json?fMilQ=true&trFmt=f&refreshTrails=1&lat=54.00366&lng=-2.547855&fDstL=0&fDstU=500',
 					type: 'get',
 					dataType: 'json',
 					async: false,
@@ -43,26 +44,10 @@
 			}
 		});
 		
-		// JSON request not using CORS proxy
-		var req = new XMLHttpRequest();
-		// Feature detection for CORS
-		if ('withCredentials' in req) {
-			req.open('GET', 'https://public-api.adsbexchange.com/VirtualRadar/AircraftList.json?fMilQ=true&trFmt=f&refreshTrails=1&lat=54.00366&lng=-2.547855&fDstL=0&fDstU=500', false);
-			req.setRequestHeader("Content-Type", 'application/x-www-form-urlencoded');
-			// Just like regular ol' XHR
-			req.onreadystatechange = function() {
-				if (req.readyState === 4) {
-					if (req.status >= 200 && req.status < 400) {
-						var data2 = JSON.parse(req.responseText)
-					}
-				}
-			};
-			req.send();
-		}
 
 	var data = $.getValues("url string");
-		for (var i = 0; i < data2.acList.length; i++) {
-			var aircraft = data2.acList[i]
+		for (var i = 0; i < data.acList.length; i++) {
+			var aircraft = data.acList[i]
 			if("Long" in aircraft && "Lat" in aircraft){
 				if("Cot" in aircraft){
 					var polyCoords = []
