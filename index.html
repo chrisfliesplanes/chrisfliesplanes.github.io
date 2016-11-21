@@ -25,13 +25,39 @@
 	var markers = []
 	var polylines = []
 	
+	function radians(n) {
+		return n * (Math.PI / 180);
+	}
+	
+	function degrees(n) {
+		return n * (180 / Math.PI);
+	}
+
+	function getBearing(startLat,startLong,endLat,endLong){
+		startLat = radians(startLat);
+		startLong = radians(startLong);
+		endLat = radians(endLat);
+		endLong = radians(endLong);
+	  var dLong = endLong - startLong;
+
+	  var dPhi = Math.log(Math.tan(endLat/2.0+Math.PI/4.0)/Math.tan(startLat/2.0+Math.PI/4.0));
+	  if (Math.abs(dLong) > Math.PI){
+		if (dLong > 0.0)
+		   dLong = -(2.0 * Math.PI - dLong);
+		else
+		   dLong = (2.0 * Math.PI + dLong);
+	  }
+
+	  return (degrees(Math.atan2(dLong, dPhi)) + 360.0) % 360.0;
+	}
+	
 	// JSON request using a CORS proxy
 	function setMarkers(map) {
 		jQuery.extend({
 			getValues: function(url) {
 				var result = null;
 				$.ajax({
-					url: 'https://taptill.herokuapp.com/radar',
+					url: 'http://localhost:5000/radar',
 					type: 'get',
 					dataType: 'json',
 					async: false,
@@ -80,22 +106,22 @@
 				string += " - "
 				string += aircraft.Call
 				string += " - "
-				string += aircraft.Alt
-				if(aircraft.Brng > 45 && aircraft.Brng < 135){
+				string += aircraft.Alt	
+				if(aircraft.Cot[aircraft.Cot.length-1] > 45 && aircraft.Cot[aircraft.Cot.length-1] < 135){
 					var image = {
 						url: 'east.png',
 						size: new google.maps.Size(24, 24),
 						origin: new google.maps.Point(0, 0),
 						anchor: new google.maps.Point(12, 12),
 					};
-				} else if(aircraft.Brng >= 135 && aircraft.Brng < 225){
+				} else if(aircraft.Cot[aircraft.Cot.length-1] >= 135 && aircraft.Cot[aircraft.Cot.length-1] < 225){
 					var image = {
 						url: 'south.png',
 						size: new google.maps.Size(24, 24),
 						origin: new google.maps.Point(0, 0),
 						anchor: new google.maps.Point(12, 12),
 					};
-				} else if(aircraft.Brng >= 225 && aircraft.Brng < 315){
+				} else if(aircraft.Cot[aircraft.Cot.length-1] >= 225 && aircraft.Cot[aircraft.Cot.length-1] < 315){
 					var image = {
 						url: 'west.png',
 						size: new google.maps.Size(24, 24),
@@ -145,7 +171,7 @@
 	setInterval(function(){
 		removeMarkers();
 		setMarkers(map);
-	}, 10000);
+	}, 3000);
 	
 </script>
 <script async defer
