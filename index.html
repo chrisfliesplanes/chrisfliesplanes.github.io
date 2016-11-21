@@ -57,7 +57,7 @@
 			getValues: function(url) {
 				var result = null;
 				$.ajax({
-					url: 'http://localhost:5000/radar',
+					url: 'https://taptill.herokuapp.com/radar',
 					type: 'get',
 					dataType: 'json',
 					async: false,
@@ -171,7 +171,7 @@
 	setInterval(function(){
 		removeMarkers();
 		setMarkers(map);
-	}, 3000);
+	}, 10000);
 	
 </script>
 <script async defer
