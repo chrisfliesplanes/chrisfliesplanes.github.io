@@ -24,6 +24,24 @@
 	var map;
 	var markers = []
 	var polylines = []
+	
+	// JSON request using a CORS proxy
+	function setMarkers(map) {
+		jQuery.extend({
+			getValues: function(url) {
+				var result = null;
+				$.ajax({
+					url: 'https://cors-anywhere.herokuapp.com/https://public-api.adsbexchange.com/VirtualRadar/AircraftList.json?fMilQ=true&trFmt=f&refreshTrails=1&lat=54.00366&lng=-2.547855&fDstL=0&fDstU=500',
+					type: 'get',
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						result = data;
+					}
+				});
+			return result;
+			}
+		});
 		
 	// JSON request not using CORS proxy
 	var req = new XMLHttpRequest();
