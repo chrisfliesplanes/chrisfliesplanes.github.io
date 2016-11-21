@@ -30,9 +30,8 @@
 		jQuery.extend({
 			getValues: function(url) {
 				var result = null;
-				var proxy = 'https://cors-anywhere.herokuapp.com/';
 				$.ajax({
-					url: 'https://crossorigin.me/https://public-api.adsbexchange.com/VirtualRadar/AircraftList.json?fMilQ=true&trFmt=f&refreshTrails=1&lat=54.00366&lng=-2.547855&fDstL=0&fDstU=500',
+					url: 'http://taptill.herokuapp.com/radar',
 					type: 'get',
 					dataType: 'json',
 					async: false,
