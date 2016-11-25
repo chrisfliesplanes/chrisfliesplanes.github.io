@@ -130,12 +130,11 @@
 					infowindows.push(infowindow)
 					infowindow.open(map)
 					console.log(intToRGB(hashCode(aircraft.Mdl)))
-					var color = shadeColor2('#' + intToRGB(hashCode(aircraft.Icao)), 30);
 					var flightPath = new google.maps.Polyline({
 						path: polyCoords,
 						strokeOpacity: 100,
 						strokeWeight: 2,
-						strokeColor: color,
+						strokeColor: '#' + intToRGB(hashCode(aircraft.Icao)),
 						icons: [{
 							icon: planeSymbol,
 							offset: '100%'
