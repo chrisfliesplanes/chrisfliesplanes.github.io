@@ -35,6 +35,23 @@
 	function degrees(n) {
 		return n * (180 / Math.PI);
 	}
+	
+	function hashCode(str) { // java String#hashCode
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+       hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+	} 
+
+	function intToRGB(i){
+		var c = (i & 0x00FFFFFF)
+			.toString(16)
+			.toUpperCase();
+
+		return "00000".substring(0, 6 - c.length) + c;
+}
+
 
 	function getBearing(startLat,startLong,endLat,endLong){
 		startLat = radians(startLat);
@@ -76,8 +93,12 @@
 	var data = $.getValues("url string");
 		for (var i = 0; i < data.acList.length; i++) {
 			var aircraft = data.acList[i]
+			var div = document.getElementById('legend');
+			div.innerHTML = ""
+			
 			if("Long" in aircraft && "Lat" in aircraft){
 				if("Cot" in aircraft){
+					div.innerHTML += '<p>' + aircraft.Call + " - " + aircraft.Mdl + '</p>';
 					var polyCoords = []
 					for (var i2 = 0; i2 < aircraft.Cot.length; i2+=3) {
 						var polyLatLng = {};
@@ -100,9 +121,8 @@
 					aircraft.Mdl + " - " + aircraft.Call + ": "+
 					aircraft.Alt + " - " + aircraft.Spd + '</p>'
 					
-					
 					var div = document.getElementById('legend');
-					div.innerHTML = ""
+
 					div.innerHTML += '<p>' + aircraft.Call + " - " + aircraft.Mdl + '</p>';
 					
 					var infowindow = new google.maps.InfoWindow({
@@ -112,11 +132,12 @@
 					});
 					infowindows.push(infowindow)
 					infowindow.open(map)
-										
+					console.log(intToRGB(hashCode(aircraft.Mdl)))
 					var flightPath = new google.maps.Polyline({
 						path: polyCoords,
 						strokeOpacity: 100,
-						strokeWeight: 1,
+						strokeWeight: 2,
+						strokeColor: '#'+ intToRGB(hashCode(aircraft.Mdl)),
 						icons: [{
 							icon: planeSymbol,
 							offset: '100%'
@@ -152,6 +173,7 @@
 			infowindows[i].close(map);
 		}
 		infowindows = []	
+
 	}
 	function initMap() {
 		map = new google.maps.Map(document.getElementById('map'), {
