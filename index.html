@@ -16,14 +16,17 @@
         padding: 0;
       }
     </style>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
   </head>
   <body>
     <div id="map"></div>
+    <div id="legend"><h3>Legend</h3></div>
 <script type="text/javascript">
 
 	var map;
 	var markers = []
 	var polylines = []
+	var infowindows = []
 	
 	function radians(n) {
 		return n * (Math.PI / 180);
@@ -82,21 +85,44 @@
 						polyLatLng['lng'] = aircraft.Cot[i2 + 1]
 						polyCoords.push(polyLatLng)	
 					};
-					var lineSymbol = {
-						path: 'M 0,-1 0,1',
-						strokeOpacity: 1,
-						scale: 2
-						
+					 var planeSymbol = {
 
-};
+      path: 'M 8.1326447,0.80527736 C 8.5471666,0.063577346 9.742752,0.030177346 10.052431,0.82497736 C 10.093464,3.0114774 10.134497,5.1980774 10.17553,7.3845774 C 12.760407,8.9653774 15.345284,10.546179 17.930161,12.127079 C 17.930161,12.881779 17.930161,13.636479 17.930161,14.391179 C 15.373077,13.579479 12.815993,12.767779 10.258908,11.956179 C 10.27281,13.280479 10.286713,14.604879 10.300615,15.929279 C 10.8565,16.555879 11.412385,17.182479 11.96827,17.809079 C 12.25527,18.269479 12.437605,19.641079 11.59784,19.085079 C 10.804104,18.802179 10.010367,18.519179 9.21663,18.236279 C 8.3133108,18.620779 7.4099916,19.005279 6.5066724,19.389779 C 6.3952441,18.705879 6.2272708,17.857479 6.8519879,17.359679 C 7.2927717,16.882879 7.7335555,16.406079 8.1743393,15.929279 C 8.1465467,14.604879 8.1187541,13.280479 8.0909615,11.956179 C 5.5894706,12.824879 3.0879797,13.693479 0.58648883,14.562179 C 0.54479393,13.821679 0.50309893,13.081079 0.46140403,12.340579 C 3.0184842,10.717079 5.5755645,9.0935778 8.1326447,7.4700774 C 8.1326447,5.2484774 8.1326447,3.0268774 8.1326447,0.80527736 z',
+	  scale: 1.1,
+	  anchor: new google.maps.Point(9,18),
+    };
+    
+					var infoCoords = {};
+					infoCoords['lat'] = aircraft.Cot[aircraft.Cot.length-3]
+					infoCoords['lng'] = aircraft.Cot[aircraft.Cot.length-2]
+					
+					var contentString = '<p>' +
+					aircraft.Mdl + " - " + aircraft.Call + ": "+
+					aircraft.Alt + " - " + aircraft.Spd + '</p>'
+					
+					
+					var div = document.getElementById('legend');
+					div.innerHTML = ""
+					div.innerHTML += '<p>' + aircraft.Call + " - " + aircraft.Mdl + '</p>';
+					
+					var infowindow = new google.maps.InfoWindow({
+						content: contentString,
+						position: infoCoords,
+						disableAutoPan: true
+					});
+					infowindows.push(infowindow)
+					infowindow.open(map)
+										
 					var flightPath = new google.maps.Polyline({
 						path: polyCoords,
-						strokeOpacity: 0,
+						strokeOpacity: 100,
+						strokeWeight: 1,
 						icons: [{
-							icon: lineSymbol,
-							offset: '0',
-							repeat: '10px'
-						}]
+							icon: planeSymbol,
+							offset: '100%'
+							// repeat: '20px'
+						  }],
+						map: map
 					});
 					
 					flightPath.setMap(map);
@@ -107,42 +133,6 @@
 				string += aircraft.Call
 				string += " - "
 				string += aircraft.Alt	
-				if(aircraft.Cot[aircraft.Cot.length-1] > 45 && aircraft.Cot[aircraft.Cot.length-1] < 135){
-					var image = {
-						url: 'east.png',
-						size: new google.maps.Size(24, 24),
-						origin: new google.maps.Point(0, 0),
-						anchor: new google.maps.Point(12, 12),
-					};
-				} else if(aircraft.Cot[aircraft.Cot.length-1] >= 135 && aircraft.Cot[aircraft.Cot.length-1] < 225){
-					var image = {
-						url: 'south.png',
-						size: new google.maps.Size(24, 24),
-						origin: new google.maps.Point(0, 0),
-						anchor: new google.maps.Point(12, 12),
-					};
-				} else if(aircraft.Cot[aircraft.Cot.length-1] >= 225 && aircraft.Cot[aircraft.Cot.length-1] < 315){
-					var image = {
-						url: 'west.png',
-						size: new google.maps.Size(24, 24),
-						origin: new google.maps.Point(0, 0),
-						anchor: new google.maps.Point(12, 12),
-					};
-				} else {
-					var image = {
-						url: 'north.png',
-						size: new google.maps.Size(24, 24),
-						origin: new google.maps.Point(0, 0),
-						anchor: new google.maps.Point(12, 12),
-					};
-				}
-				var marker = new google.maps.Marker({
-					position: latLng,
-					map: map,
-					title: string,
-					icon: image
-				});
-				markers.push(marker)
 				polylines.push(flightPath)
 			};
 		};
@@ -158,10 +148,14 @@
 			polylines[i].setMap(null);
 		}
 		polylines = [];
+		for(i=0;i<infowindows.length;i++){
+			infowindows[i].close(map);
+		}
+		infowindows = []	
 	}
 	function initMap() {
 		map = new google.maps.Map(document.getElementById('map'), {
-			zoom: 6,
+			zoom: 8,
 			center: new google.maps.LatLng(53.509865, -4.118092),
 			mapTypeId: 'terrain'
 		});
@@ -171,7 +165,7 @@
 	setInterval(function(){
 		removeMarkers();
 		setMarkers(map);
-	}, 10000);
+	}, 5000);
 	
 </script>
 <script async defer

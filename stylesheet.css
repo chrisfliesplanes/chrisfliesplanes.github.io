@@ -1,0 +1,9 @@
+#map {
+  float: left;
+  width: 100%;
+  overflow: hidden;
+}
+
+#legend {
+  overflow: hidden;
+}
