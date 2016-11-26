@@ -98,7 +98,7 @@
 	var data = $.getValues("url string");
 		for (var i = 0; i < data.acList.length; i++) {
 			var aircraft = data.acList[i]
-			if("Long" in aircraft && "Lat" in aircraft){
+			if("Long" in aircraft && "Lat" in aircraft && "Icao" in aircraft){
 				if("Cot" in aircraft){
 					div.innerHTML += '<p>' + aircraft.Call + " - " + aircraft.Mdl + '</p>';
 					var polyCoords = []
@@ -129,7 +129,6 @@
 					});
 					infowindows.push(infowindow)
 					infowindow.open(map)
-					console.log(intToRGB(hashCode(aircraft.Mdl)))
 					var flightPath = new google.maps.Polyline({
 						path: polyCoords,
 						strokeOpacity: 100,
