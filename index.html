@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
 		<script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
 										<script src="js/leaflet.polylineDecorator.js"></script>
@@ -43,10 +43,12 @@
 					var filterAcList = filterPlanes(acList);
 					setMarkers(filterAcList);
 					setTimeout(function(){
-		loadDoc();
-	}, 5000);
-				};
-			};
+						loadDoc();
+					}, 5000);
+				}
+				
+			
+		};
 			xhttp.open("GET", "https://taptill.herokuapp.com/radar", true);
 			xhttp.send();
 			};
@@ -71,15 +73,25 @@
 				var polyCoords = []
 				for (var i2 = 0; i2 < aircraft.Cot.length; i2+=3) {
 					var polyLatLng = new L.LatLng(aircraft.Cot[i2], aircraft.Cot[i2 + 1])
-					polyCoords.push(polyLatLng);
+						polyCoords.push(polyLatLng);
 				};
-				var polyLinePattern = L.polylineDecorator(polyCoords, {
-					patterns: [
-						{ offset: '100%', symbol: L.Symbol.marker({rotate: true, markerOptions: {icon: L.icon({iconUrl: 'south.png',iconAnchor: [16,16]})}})}
-					]			
-				}).addTo(mymap);
-				symbols.push(polyLinePattern);
-				polyLinePattern.bindPopup(aircraft.Mdl);
+				if(polyCoords.length > 1){
+					var polyline = L.polyline(polyCoords, {opacity: 0.2}).addTo(mymap);
+					console.log(polyline);
+					var markerPatterns = L.polylineDecorator(polyline, {
+						patterns: [
+							{ offset: '100%', symbol: L.Symbol.marker({rotate: true, markerOptions: {
+						icon: L.icon({
+							iconUrl: 'south.png',
+							iconAnchor: [11, 16]
+						})
+					}})}
+						]
+					}).addTo(mymap);
+					symbols.push(markerPatterns)
+					symbols.push(polyline);
+					markerPatterns.bindPopup(aircraft.Mdl + '<br>' + aircraft.Call + '<br>' + aircraft.Alt + ' - ' + aircraft.Spd);
+				};
 			};
 		};
 		
@@ -87,15 +99,7 @@
 			for(i=0;i<symbols.length;i++){
 				mymap.removeLayer(symbols[i])
 			}
-			markers = [];
-			for(i=0;i<markers.length;i++){
-				mymap.removeLayer(markers[i])
-			}
-			markers = [];
-			for(i=0;i<polylines.length;i++){
-				mymap.removeLayer(polylines[i])
-			}
-			polylines = [];
+			symbols = [];
 		};			 
 			 
 		</script>
