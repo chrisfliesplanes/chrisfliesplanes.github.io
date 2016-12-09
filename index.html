@@ -123,9 +123,9 @@
 					symbols.push(polyline);
 					markerPatterns.callsign = aircraft.Icao;
 					if(aircraft.Icao == watched_plane){
-						markerPatterns.bindPopup(aircraft.Mdl + '<br>' + aircraft.Call + ' : ' + aircraft.Sqk + '<br>' + aircraft.Alt + ' - ' + aircraft.Spd + '<br>' + aircraft.Op + ' : ' + aircraft.Species).openPopup();
+						markerPatterns.bindPopup(aircraft.Mdl + '<br>' + aircraft.Call + ' : ' + aircraft.Sqk + '<br>' + aircraft.Alt + ' - ' + aircraft.Spd + '<br>' + aircraft.Op).openPopup();
 					}else{
-						markerPatterns.bindPopup(aircraft.Mdl + '<br>' + aircraft.Call + ' : ' + aircraft.Sqk +  '<br>' + aircraft.Alt + ' - ' + aircraft.Spd + '<br>' + aircraft.Op + ' : ' + aircraft.Species);
+						markerPatterns.bindPopup(aircraft.Mdl + '<br>' + aircraft.Call + ' : ' + aircraft.Sqk +  '<br>' + aircraft.Alt + ' - ' + aircraft.Spd + '<br>' + aircraft.Op);
 					};
 				};
 			};
