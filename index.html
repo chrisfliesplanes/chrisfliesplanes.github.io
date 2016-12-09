@@ -96,7 +96,11 @@
 					symbols.push(markerPatterns)
 					symbols.push(polyline);
 					markerPatterns.callsign = aircraft.Call;
-					markerPatterns.bindPopup(aircraft.Mdl + '<br>' + aircraft.Call + '<br>' + aircraft.Alt + ' - ' + aircraft.Spd + '<br>' + aircraft.Op);
+					if(aircraft.Call == watched_plane){
+						markerPatterns.bindPopup(aircraft.Mdl + '<br>' + aircraft.Call + '<br>' + aircraft.Alt + ' - ' + aircraft.Spd + '<br>' + aircraft.Op).openPopup();
+					}else{
+						markerPatterns.bindPopup(aircraft.Mdl + '<br>' + aircraft.Call + '<br>' + aircraft.Alt + ' - ' + aircraft.Spd + '<br>' + aircraft.Op);
+					};
 				};
 			};
 		};
