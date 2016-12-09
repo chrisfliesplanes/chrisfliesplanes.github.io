@@ -35,7 +35,6 @@
 			}).addTo(mymap);
 			 
 			function loadDoc() {
-				console.log("I have been called")
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
@@ -66,7 +65,6 @@
 		};
 		
 		function setMarkers(acList) {
-			console.log("This has been run");
 			removeMarkers()
 			for(var i in acList){
 				var aircraft = acList[i];
@@ -77,7 +75,6 @@
 				};
 				if(polyCoords.length > 1){
 					var polyline = L.polyline(polyCoords, {opacity: 0.2}).addTo(mymap);
-					console.log(polyline);
 					var markerPatterns = L.polylineDecorator(polyline, {
 						patterns: [
 							{ offset: '100%', symbol: L.Symbol.marker({rotate: true, markerOptions: {
