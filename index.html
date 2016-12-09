@@ -78,7 +78,7 @@
 					if(aircraft.Icao == watched_plane){
 						var polyline = L.polyline(polyCoords, {opacity: 0.5,
 						lineJoin: 'round', smoothFactor: 23.0, color: 'blue'}).addTo(mymap);
-					} else if(aircraft.Sqk in ["7700","7600","7500"]) {
+					} else if(aircraft.Sqk == "7700" || aircraft.Sqk == "7600" || aircraft.Sqk == "7500") {
 						var polyline = L.polyline(polyCoords, {opacity: 1,
 						lineJoin: 'round', smoothFactor: 23.0, color: 'red'}).addTo(mymap);
 					} else {
