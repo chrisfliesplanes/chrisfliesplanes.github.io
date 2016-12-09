@@ -75,15 +75,40 @@
 						polyCoords.push(polyLatLng);
 				};
 				if(polyCoords.length > 1){
-					if(aircraft.Call == watched_plane){
+					if(aircraft.Icao == watched_plane){
 						var polyline = L.polyline(polyCoords, {opacity: 0.5,
 						lineJoin: 'round', smoothFactor: 23.0, color: 'blue'}).addTo(mymap);
+					} else if(aircraft.Sqk in ["7700","7600","7500"]) {
+						var polyline = L.polyline(polyCoords, {opacity: 1,
+						lineJoin: 'round', smoothFactor: 23.0, color: 'red'}).addTo(mymap);
 					} else {
 						var polyline = L.polyline(polyCoords, {opacity: 0.2,
 						lineJoin: 'round', smoothFactor: 23.0, color: 'red'}).addTo(mymap);
 					};
-					
+					if(aircraft.Species == 4){
 					var markerPatterns = L.polylineDecorator(polyline, {
+						patterns: [
+							{ offset: '100%', symbol: L.Symbol.marker({rotate: true, markerOptions: {
+						icon: L.icon({
+							iconUrl: 'heli.png',
+							iconAnchor: [11, 16]
+						})
+					}})}
+						]
+					}).addTo(mymap).on('click', onClick);
+					} else if(aircraft.Engines > 2) {
+						var markerPatterns = L.polylineDecorator(polyline, {
+						patterns: [
+							{ offset: '100%', symbol: L.Symbol.marker({rotate: true, markerOptions: {
+						icon: L.icon({
+							iconUrl: 'icon_plane.png',
+							iconAnchor: [16, 16]
+						})
+					}})}
+						]
+					}).addTo(mymap).on('click', onClick);
+					} else {
+						var markerPatterns = L.polylineDecorator(polyline, {
 						patterns: [
 							{ offset: '100%', symbol: L.Symbol.marker({rotate: true, markerOptions: {
 						icon: L.icon({
@@ -93,13 +118,14 @@
 					}})}
 						]
 					}).addTo(mymap).on('click', onClick);
+					};
 					symbols.push(markerPatterns)
 					symbols.push(polyline);
-					markerPatterns.callsign = aircraft.Call;
-					if(aircraft.Call == watched_plane){
-						markerPatterns.bindPopup(aircraft.Mdl + '<br>' + aircraft.Call + '<br>' + aircraft.Alt + ' - ' + aircraft.Spd + '<br>' + aircraft.Op).openPopup();
+					markerPatterns.callsign = aircraft.Icao;
+					if(aircraft.Icao == watched_plane){
+						markerPatterns.bindPopup(aircraft.Mdl + '<br>' + aircraft.Call + ' : ' + aircraft.Sqk + '<br>' + aircraft.Alt + ' - ' + aircraft.Spd + '<br>' + aircraft.Op + ' : ' + aircraft.Species).openPopup();
 					}else{
-						markerPatterns.bindPopup(aircraft.Mdl + '<br>' + aircraft.Call + '<br>' + aircraft.Alt + ' - ' + aircraft.Spd + '<br>' + aircraft.Op);
+						markerPatterns.bindPopup(aircraft.Mdl + '<br>' + aircraft.Call + ' : ' + aircraft.Sqk +  '<br>' + aircraft.Alt + ' - ' + aircraft.Spd + '<br>' + aircraft.Op + ' : ' + aircraft.Species);
 					};
 				};
 			};
