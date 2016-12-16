@@ -3,6 +3,7 @@
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+		<link rel="stylesheet" href="stylesheet.css" />
 		<script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
 										<script src="js/leaflet.polylineDecorator.js"></script>
 
@@ -17,6 +18,10 @@
 	</head>
 	<body onload="loadDoc();">
 		 <div id="mapid"></div>
+		 <div id="mySidenav" class="sidenav">
+			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		 </div>
+		 <span onclick="openNav()">open</span>
 		 
 		 
 		 
@@ -28,6 +33,7 @@
 			var symbols = [];
 			var watched_plane = "";
 			var mymap = L.map('mapid').setView([54.505, -2.09], 7);
+			var div = document.getElementById('mySidenav');
 			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY2hyaXN0aGVyb2JpbiIsImEiOiJjaXdoazBsencwMDBlMnZvNHVyMDRwcHY0In0.Lz7E9y59ja6xxFnvmxDTkg', {
 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 			maxZoom: 18,
@@ -42,6 +48,7 @@
 					var acList = JSON.parse(this.responseText).acList;
 					var filterAcList = filterPlanes(acList);
 					setMarkers(filterAcList);
+					onClickAnchors();
 					setTimeout(function(){
 						loadDoc();
 					}, 5000);
@@ -69,6 +76,7 @@
 			removeMarkers()
 			for(var i in acList){
 				var aircraft = acList[i];
+				div.innerHTML = div.innerHTML + "<a class = 'addAircraft' id='" + aircraft.Icao + "'>" + aircraft.Call + " - " + aircraft.Mdl + "</a>"
 				var polyCoords = []
 				for (var i2 = 0; i2 < aircraft.Cot.length; i2+=3) {
 					var polyLatLng = new L.LatLng(aircraft.Cot[i2], aircraft.Cot[i2 + 1])
@@ -131,23 +139,44 @@
 			};
 		};
 		
+		function onClickAnchors(){
+        var anchors = document.getElementsByClassName('addAircraft');
+        for(var i = 0; i < anchors.length; i++) {
+            var anchor = anchors[i];
+            anchor.onclick = function() {
+                watched_plane = this.id;
+                loadDoc();
+            }
+        }
+    };
+		
 		function removeMarkers(){
 			for(i=0;i<symbols.length;i++){
 				mymap.removeLayer(symbols[i])
 			}
 			symbols = [];
+			div.innerHTML = '<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>'
 		};			 
 		
 		function onClick(e) {
 			console.log(this.callsign);
 			watched_plane = this.callsign;
 			loadDoc();
-		}
+		};
 		
 		mymap.on('click', function(e) {        
         watched_plane = ""
         loadDoc();
     });
+    /* Set the width of the side navigation to 250px */
+function openNav() {
+    document.getElementById("mySidenav").style.width = "500px";
+}
+
+/* Set the width of the side navigation to 0 */
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+}
 			 
 		</script>
 			
