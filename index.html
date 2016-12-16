@@ -82,7 +82,7 @@
 						var polyline = L.polyline(polyCoords, {opacity: 1,
 						lineJoin: 'round', smoothFactor: 23.0, color: 'red'}).addTo(mymap);
 					} else {
-						var polyline = L.polyline(polyCoords, {opacity: 0.2,
+						var polyline = L.polyline(polyCoords, {opacity: 0.0,
 						lineJoin: 'round', smoothFactor: 23.0, color: 'red'}).addTo(mymap);
 					};
 					if(aircraft.Species == 4){
@@ -143,6 +143,11 @@
 			watched_plane = this.callsign;
 			loadDoc();
 		}
+		
+		mymap.on('click', function(e) {        
+        watched_plane = ""
+        loadDoc();
+    });
 			 
 		</script>
 			
