@@ -118,6 +118,30 @@
 					}})}
 						]
 					}).addTo(mymap).on('click', onClick);
+					} else if(aircraft.Call && aircraft.Call.includes("RED")) {
+						var markerPatterns = L.polylineDecorator(polyline, {
+						patterns: [
+							{ offset: '100%', symbol: L.Symbol.marker({rotate: true, markerOptions: {
+						icon: L.icon({
+							iconUrl: 'redarrow.png',
+							iconAnchor: [16, 16]
+						})
+					}})}
+						]
+					}).addTo(mymap).on('click', onClick);
+					alert("A Red Arrow has been spotted")
+					} else if(aircraft.Mdl && aircraft.Mdl.includes("F-35")) {
+						var markerPatterns = L.polylineDecorator(polyline, {
+						patterns: [
+							{ offset: '100%', symbol: L.Symbol.marker({rotate: true, markerOptions: {
+						icon: L.icon({
+							iconUrl: 'redarrow.png',
+							iconAnchor: [16, 16]
+						})
+					}})}
+						]
+					}).addTo(mymap).on('click', onClick);
+					alert("An F-35 has been spotted");
 					} else {
 						var markerPatterns = L.polylineDecorator(polyline, {
 						patterns: [
